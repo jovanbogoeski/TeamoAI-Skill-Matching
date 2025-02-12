@@ -1,7 +1,17 @@
-Teamo AI - Skill Matching System
+Teamo AI - Skill Matching System'
+
 📌 Overview
 
-Teamo AI is a skill-matching service that intelligently compares user-submitted skills against an administrator-curated skill database. By leveraging Natural Language Processing (NLP), fuzzy matching, and TF-IDF similarity, Teamo AI provides accurate, typo-tolerant, and semantically relevant skill recommendations.
+Teamo AI is a FastAPI-based service designed to help users find relevant skills by comparing user-submitted skill names against an administrator-curated skill list. The system applies multiple matching algorithms (NLP, Fuzzy Matching, TF-IDF) to determine similarity scores and returns the best-matching skills to the user.
+
+Why use Teamo AI?
+
+Intelligent Matching: Uses Natural Language Processing (NLP) to understand skill similarities.
+
+Typo-Tolerance: Handles misspellings, abbreviations, and synonyms.
+
+Structured Logging: Stores queries, match results, and matching methods (simulating a database structure).
+
 
 🛠 Problem Statement
 Many users search for skills using different naming conventions, abbreviations, or misspellings. For example:
@@ -14,45 +24,88 @@ The challenge is to accurately map user input to the closest administrator-defin
 
 
 🚀 Solution Approach
-Teamo AI enhances skill-matching accuracy by combining three powerful matching techniques:
 
-1️⃣ Multiple Matching Algorithms for Higher Accuracy
-🔹 NLP Semantic Similarity (spaCy) → Understands meaning-based relationships between words.
-🔹 Fuzzy Matching (Levenshtein Distance) → Handles typos, abbreviations, and partial matches.
-🔹 TF-IDF Cosine Similarity → Matches based on word frequency and importance.
+Teamo AI uses three different matching algorithms to ensure accurate and typo-resistant skill matching:
 
-Each method contributes to a weighted scoring system to ensure precise and robust skill-matching.
+🔹 1. NLP Semantic Similarity (spaCy)
 
-2️⃣ Optimized Query Processing
-    ✅ Precomputed NLP embeddings → Faster similarity calculations.
-    ✅ NumPy-optimized cosine similarity → Avoids slow Python loops.
-    ✅ Weighted aggregation of multiple methods → Balances accuracy and efficiency.
+Understands meaning-based relationships between words.
 
-3️⃣ FastAPI-Based REST API
-The system is designed as a FastAPI web service, making it scalable, lightweight, and easy to integrate into applications.
+Example: AI and Machine Learning might be considered similar.
+
+🔹 2. Fuzzy Matching (Levenshtein Distance)
+
+Handles typos, partial matches, and misspellings.
+
+Example: Phyton can match Python.
+
+🔹 3. TF-IDF Cosine Similarity
+
+Matches based on word frequency and importance.
+
+Example: Data Scientist could match Data Science.
+
+✅ Each method has a weight and threshold to balance accuracy.
+
+
+📌 Features
+
+✅ Logs user queries (mimicking a Query table in a database)
+
+✅ Stores match results (like a MatchResult table)
+
+✅ Implements multiple matching methods (configurable like a MatchingMethodConfig table)
+
+✅ FastAPI-based RESTful API (easy to integrate into applications)
+
+✅ Efficient computation using NumPy & precomputed vectors
+
 
 
 📝 How It Works
-🔹 Skill Matching Workflow
-The user submits a skill name via the API.
-The system processes the input using multiple similarity algorithms.
-Each method computes a match score based on relevance.
-The system aggregates results and returns the best-matching skills.
 
-Example Request & Response
+🔹 Workflow Example
 
-📥 API Input (JSON)
+1️⃣ A user submits a skill name via the API.
+2️⃣ The system processes the input using NLP, Fuzzy Matching, and TF-IDF.
+3️⃣ Each method calculates similarity scores, and the system aggregates results.
+4️⃣ The best-matching skills are returned to the user.5️⃣ The system logs the query & match results for tracking.
+
+
+🔍 API Endpoints
+
+✅ Get Available Matching Methods
+
+GET /matching-methods/
+Returns all matching methods and their thresholds.
+
+✅ Submit a Skill for Matching
+POST /match-skill/
+
+Example Input:
 {
     "user_skill": "machine learning"
 }
 
-📤 API Output (JSON)
 {
     "submitted_skill": "machine learning",
     "matches": [
-        {"skill": "data science", "match_score": 0.85},
-        {"skill": "NLP", "match_score": 0.78},
-        {"skill": "Software engineering", "match_score": 0.65}
+        {
+            "match_id": 1,
+            "query_id": 1,
+            "skill": "data science",
+            "matching_method": "NLP Semantic Similarity",
+            "match_score": 0.75,
+            "created_at": "2025-02-12T14:00:00"
+        },
+        {
+            "match_id": 2,
+            "query_id": 1,
+            "skill": "Software Engineering",
+            "matching_method": "Fuzzy Matching",
+            "match_score": 0.68,
+            "created_at": "2025-02-12T14:00:00"
+        }
     ]
 }
 
@@ -70,14 +123,6 @@ curl -X 'POST' \
   'http://127.0.0.1:8000/match-skill/' \
   -H 'Content-Type: application/json' \
   -d '{"user_skill": "machine learning"}'
-
-🎯 Key Features & Benefits
-
-✅ Supports NLP-based intelligent matching (Handles synonyms & semantics).
-✅ Fuzzy matching for typos & abbreviations (e.g., "Phyton" → "Python").
-✅ TF-IDF for keyword relevance (Finds similar skills based on word importance).
-✅ FastAPI-based RESTful API (Easy integration with any application).
-✅ Efficient computation using NumPy & precomputed vectors.
 
 📌 Contributors
 
